@@ -10,6 +10,9 @@
     "type": "git",
     "url": "git+https://github.com/Nazver/frontend-project-46.git"
   },
+  "bin": {
+    "gendiff": "./bin/gendiff.js"
+  },
   "type": "module",
   "author": "",
   "license": "ISC",
