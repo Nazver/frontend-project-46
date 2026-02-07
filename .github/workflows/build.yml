@@ -33,7 +33,7 @@ jobs:
         fail_ci_if_error: true
     
     - name: SonarQube Scan
-      uses: SonarSource/sonarqube-scan-action@v6.1.0
+      uses: SonarSource/sonarqube-scan-action@b7c6c10e6ae5a8b7e5a4dcb7e8c2d55a6c1e8a2e
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
