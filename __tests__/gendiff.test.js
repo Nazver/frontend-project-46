@@ -1,4 +1,3 @@
-/* eslint-disable */
 import formatDiff from '../src/formatDiff.js'
 import diff from '../src/diff.js'
 
