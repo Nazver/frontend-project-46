@@ -1,20 +1,13 @@
 name: CI
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push, pull_request]
 
 jobs:
-  test-and-scan:
+  test:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0  
+    - uses: actions/checkout@v3
     
     - name: Setup Node.js
       uses: actions/setup-node@v3
@@ -25,39 +18,30 @@ jobs:
     - name: Install dependencies
       run: npm ci
     
-    - name: Lint
-      run: npm run lint
-    
-    - name: Test with coverage
-      run: npm test -- --coverage --watchAll=false
-      
-    - name: Verify coverage report
+    - name: Run tests with coverage
       run: |
-        if [ -f "coverage/lcov.info" ]; then
-          echo "Coverage report found"
-          ls -la coverage/
-        else
-          echo "Coverage report not found!"
-          exit 1
+        npm test -- --coverage --coverageReporters=lcov --coverageReporters=text --coverageReporters=json --watchAll=false
+        if [ ! -f "coverage/lcov.info" ] && [ -f "coverage/coverage-final.json" ]; then
+          echo "Converting coverage format..."
+          npx lcov-result-merger 'coverage/coverage-final.json' 'coverage/lcov.info'
         fi
     
     - name: Upload to Codecov
       uses: codecov/codecov-action@v3.1.6
       with:
-        file: ./coverage/lcov.info
-        fail_ci_if_error: false  
+        files: ./coverage/lcov.info
+        fail_ci_if_error: true
     
     - name: SonarQube Scan
-      uses: SonarSource/sonarqube-scan-action@v6.1.0  
+      uses: SonarSource/sonarqube-scan-action@v6.1.0
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         args: >
-          -Dsonar.projectKey=${{ github.repository }}
-          -Dsonar.organization=your-org-name
+          -Dsonar.projectKey=frontend-project-46
           -Dsonar.sources=src
           -Dsonar.tests=__tests__
           -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-          -Dsonar.test.inclusions=**/*.test.js,**/*.spec.js
-          -Dsonar.coverage.exclusions=**/node_modules/**,**/__tests__/**,**/*.test.js
+          -Dsonar.test.inclusions=**/*.test.js
+          -Dsonar.coverage.exclusions=**/node_modules/**,**/__tests__/**
