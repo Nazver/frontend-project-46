@@ -31,18 +31,18 @@ export default function diff(file1, file2) {
     } else {
       const valuesEqual = JSON.stringify(value1) === JSON.stringify(value2);
       
-      if (!valuesEqual) {
+      if (valuesEqual) {
+        result.push({ 
+          key, 
+          status: 'unchanged', 
+          value: value1 
+        });
+      } else {
         result.push({ 
           key, 
           status: 'changed', 
           oldValue: value1, 
           newValue: value2 
-        });
-      } else {
-        result.push({ 
-          key, 
-          status: 'unchanged', 
-          value: value1 
         });
       }
     }
