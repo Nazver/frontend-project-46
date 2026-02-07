@@ -27,7 +27,7 @@ jobs:
         fi
     
     - name: Upload to Codecov
-      uses: codecov/codecov-action@v3.1.6
+      uses: SonarSource/sonarqube-scan-action@b7c6c10e6ae5a8b7e5a4dcb7e8c2d55a6c1e8a2e
       with:
         files: ./coverage/lcov.info
         fail_ci_if_error: true
