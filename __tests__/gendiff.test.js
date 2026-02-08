@@ -1,5 +1,5 @@
-import formatDiff from '../src/formatDiff.js'
 import diff from '../src/diff.js'
+import formatStylish from '../src/formatters/stylish.js'
 
 describe('diff', () => {
   test('added key', () => {
@@ -121,10 +121,10 @@ describe('diff', () => {
   })
 })
 
-describe('formatDiff', () => {
+describe('formatStylish', () => {
   test('added status', () => {
     const diffArray = [{ key: 'age', status: 'added', value: 30 }]
-    const result = formatDiff(diffArray)
+    const result = formatStylish(diffArray)
 
     expect(result).toBe(`{
   + age: 30
@@ -133,7 +133,7 @@ describe('formatDiff', () => {
 
   test('removed status', () => {
     const diffArray = [{ key: 'age', status: 'removed', value: 30 }]
-    const result = formatDiff(diffArray)
+    const result = formatStylish(diffArray)
 
     expect(result).toBe(`{
   - age: 30
@@ -148,7 +148,7 @@ describe('formatDiff', () => {
       newValue: 31,
     }]
 
-    const result = formatDiff(diffArray)
+    const result = formatStylish(diffArray)
 
     expect(result).toBe(`{
   - age: 30
@@ -158,7 +158,7 @@ describe('formatDiff', () => {
 
   test('unchanged status', () => {
     const diffArray = [{ key: 'name', status: 'unchanged', value: 'John' }]
-    const result = formatDiff(diffArray)
+    const result = formatStylish(diffArray)
 
     expect(result).toBe(`{
     name: John
@@ -173,7 +173,7 @@ describe('formatDiff', () => {
       { key: 'changed', status: 'changed', oldValue: 'old', newValue: 'new' },
     ]
 
-    const result = formatDiff(diffArray)
+    const result = formatStylish(diffArray)
 
     const expected = `{
     unchanged: value1
@@ -195,7 +195,7 @@ describe('formatDiff', () => {
       { key: 'undefined', status: 'unchanged', value: undefined },
     ]
 
-    const result = formatDiff(diffArray)
+    const result = formatStylish(diffArray)
 
     expect(result).toBe(`{
     string: text
@@ -213,7 +213,7 @@ describe('formatDiff', () => {
       { key: 'key with spaces', status: 'unchanged', value: 'value' },
     ]
 
-    const result = formatDiff(diffArray)
+    const result = formatStylish(diffArray)
 
     expect(result).toContain('key-with-dash: value')
     expect(result).toContain('key.with.dot: value')
@@ -226,7 +226,7 @@ describe('formatDiff', () => {
       { key: 'long', status: 'unchanged', value: longText },
     ]
 
-    const result = formatDiff(diffArray)
+    const result = formatStylish(diffArray)
 
     expect(result).toBe(`{
     long: ${longText}
@@ -239,7 +239,7 @@ describe('formatDiff', () => {
       { key: 'a', status: 'unchanged', value: 2 },
     ]
 
-    const result = formatDiff(diffArray)
+    const result = formatStylish(diffArray)
 
     const lines = result.split('\n')
     expect(lines[1]).toContain('z: 1')
