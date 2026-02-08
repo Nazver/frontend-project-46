@@ -1,31 +1,50 @@
-export default function formatDiff(diffArray) {
-  const lines = []
+const stringify = (value, depth = 1) => {
+  const indentSize = 4
+  const currentIndent = ' '.repeat(indentSize * depth)
+  const bracketIndent = ' '.repeat(indentSize * (depth - 1))
 
-  diffArray.forEach((item) => {
+  if (typeof value !== 'object' || value === null) {
+    return String(value)
+  }
+
+  const entries = Object.entries(value)
+  const lines = entries.map(([key, val]) => {
+    const formattedValue = stringify(val, depth + 1)
+    return `${currentIndent}${key}: ${formattedValue}`
+  })
+
+  return `{\n${lines.join('\n')}\n${bracketIndent}}`
+}
+
+export default function formatDiff(diffArray, depth = 1) {
+  const indentSize = 4
+  const currentIndent = ' '.repeat(indentSize * depth - 2)
+  const bracketIndent = ' '.repeat(indentSize * (depth - 1))
+
+  const lines = diffArray.map((item) => {
     switch (item.status) {
       case 'added':
-        lines.push(`  + ${item.key}: ${item.value}`)
-        break
+        return `${currentIndent}+ ${item.key}: ${stringify(item.value, depth + 1)}`
 
       case 'removed':
-        lines.push(`  - ${item.key}: ${item.value}`)
-        break
+        return `${currentIndent}- ${item.key}: ${stringify(item.value, depth + 1)}`
 
-      case 'changed':
-        lines.push(
-          `  - ${item.key}: ${item.oldValue}`,
-          `  + ${item.key}: ${item.newValue}`,
-        )
-        break
+      case 'changed': {
+        const oldValue = stringify(item.oldValue, depth + 1)
+        const newValue = stringify(item.newValue, depth + 1)
+        return `${currentIndent}- ${item.key}: ${oldValue}\n${currentIndent}+ ${item.key}: ${newValue}`
+      }
 
       case 'unchanged':
-        lines.push(`    ${item.key}: ${item.value}`)
-        break
+        return `${currentIndent}  ${item.key}: ${stringify(item.value, depth + 1)}`
+
+      case 'nested':
+        return `${currentIndent}  ${item.key}: ${formatDiff(item.children, depth + 1)}`
 
       default:
-        break
+        return ''
     }
   })
 
-  return `{\n${lines.join('\n')}\n}`
+  return `{\n${lines.join('\n')}\n${bracketIndent}}`
 }
