@@ -1,47 +1,23 @@
-name: CI
-
-on: [push, pull_request]
-
+name: Build
+on:
+ push:
+   branches:
+     - main
+ pull_request:
+   types: [opened, synchronize, reopened]
 jobs:
-  test:
+  sonarqube:
+    name: SonarQube
     runs-on: ubuntu-latest
-    
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: npm ci
-    
-    - name: Run tests with coverage
-      run: |
-        npm test -- --coverage --coverageReporters=lcov --coverageReporters=text --coverageReporters=json --watchAll=false
-        if [ ! -f "coverage/lcov.info" ] && [ -f "coverage/coverage-final.json" ]; then
-          echo "Converting coverage format..."
-          npx lcov-result-merger 'coverage/coverage-final.json' 'coverage/lcov.info'
-        fi
-    
-    - name: Upload to Codecov
-      uses: SonarSource/sonarqube-scan-action@8096f9f257a1793796d1948833924036f06a147e
-      with:
-        files: ./coverage/lcov.info
-        fail_ci_if_error: true
-    
-    - name: SonarQube Scan
-      uses: SonarSource/sonarqube-scan-action@8096f9f257a1793796d1948833924036f06a147e
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        args: >
-          -Dsonar.projectKey=frontend-project-46
-          -Dsonar.sources=src
-          -Dsonar.tests=__tests__
-          -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-          -Dsonar.test.inclusions=**/*.test.js
-          -Dsonar.coverage.exclusions=**/node_modules/**,**/__tests__/**
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 
+      - name: Install dependencies
+        run: npm i
+      - name: Test and coverage
+        run: npx jest --coverage
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v7
+        env:
+          SONAR_TOKEN: ${{ secrets. SONARCLOUD_TOKEN }}
