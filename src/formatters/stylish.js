@@ -16,7 +16,7 @@ const stringify = (value, depth = 1) => {
   return `{\n${lines.join('\n')}\n${bracketIndent}}`
 }
 
-export default function formatDiff(diffArray, depth = 1) {
+const formatStylish = (diffArray, depth = 1) => {
   const indentSize = 4
   const currentIndent = ' '.repeat(indentSize * depth - 2)
   const bracketIndent = ' '.repeat(indentSize * (depth - 1))
@@ -39,7 +39,7 @@ export default function formatDiff(diffArray, depth = 1) {
         return `${currentIndent}  ${item.key}: ${stringify(item.value, depth + 1)}`
 
       case 'nested':
-        return `${currentIndent}  ${item.key}: ${formatDiff(item.children, depth + 1)}`
+        return `${currentIndent}  ${item.key}: ${formatStylish(item.children, depth + 1)}`
 
       default:
         return ''
@@ -48,3 +48,5 @@ export default function formatDiff(diffArray, depth = 1) {
 
   return `{\n${lines.join('\n')}\n${bracketIndent}}`
 }
+
+export default formatStylish
