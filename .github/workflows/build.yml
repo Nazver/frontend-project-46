@@ -26,5 +26,6 @@ jobs:
         with:
           args: >
             -Dsonar.organization=nazver
+            -Dsonar.projectKey=Nazver_frontend-project-46
         env:
           SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
