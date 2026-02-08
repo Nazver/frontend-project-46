@@ -1,9 +1,11 @@
 import formatStylish from './stylish.js'
 import formatPlain from './plain.js'
+import formatJson from './json.js'
 
 const formatters = {
   stylish: formatStylish,
   plain: formatPlain,
+  json: formatJson,
 }
 
 export default function getFormatter(format) {
@@ -15,4 +17,4 @@ export default function getFormatter(format) {
   return formatter
 }
 
-export { formatStylish, formatPlain }
+export { formatStylish, formatPlain, formatJson }
