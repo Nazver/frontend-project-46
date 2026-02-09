@@ -4,7 +4,7 @@ import formatStylish from '../src/formatters/stylish.js'
 import formatPlain from '../src/formatters/plain.js'
 import formatJson from '../src/formatters/json.js'
 import getFormatter from '../src/formatters/index.js'
-import fs from 'fs'
+import fs from 'node:fs'
 
 describe('diff function', () => {
   test('finds added key', () => {
