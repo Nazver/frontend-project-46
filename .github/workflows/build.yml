@@ -25,7 +25,7 @@ jobs:
         run: npx jest --coverage
 
       - name: SonarQube Scan
-        uses: a31c9398be7ace6bbfaf30c0bd5d415f843d45e9
+        uses: SonarSource/sonarqube-scan-action@a31c9398be7ace6bbfaf30c0bd5d415f843d45e9
         with:
           args: >
             -Dsonar.organization=nazver
