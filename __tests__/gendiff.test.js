@@ -43,7 +43,7 @@ describe('formatters', () => {
     { key: 'unchanged', status: 'unchanged', value: 'same' },
     { key: 'added', status: 'added', value: 'new' },
     { key: 'removed', status: 'removed', value: 'old' },
-    { key: 'changed', status: 'changed', oldValue: 'old', newValue: 'new' }
+    { key: 'changed', status: 'changed', oldValue: 'old', newValue: 'new' },
   ]
 
   test('stylish format shows added', () => {
@@ -58,8 +58,8 @@ describe('formatters', () => {
 
   test('plain format works', () => {
     const result = formatPlain(sampleDiff)
-    expect(result).toContain("Property 'added' was added")
-    expect(result).toContain("Property 'removed' was removed")
+    expect(result).toContain('Property \'added\' was added')
+    expect(result).toContain('Property \'removed\' was removed')
   })
 
   test('plain format handles complex values', () => {
@@ -81,7 +81,6 @@ describe('formatters', () => {
     expect(formatPlain([])).toBe('')
   })
 })
-
 
 describe('getFormatter', () => {
   test('returns stylish formatter', () => {
@@ -106,7 +105,7 @@ describe('gendiff', () => {
 
   test('compares JSON files with plain', () => {
     const result = gendiff('__fixtures__/file1.json', '__fixtures__/file2.json', 'plain')
-    expect(result).toContain("Property 'common.follow' was added")
+    expect(result).toContain('Property \'common.follow\' was added')
   })
 
   test('compares JSON files with json', () => {
